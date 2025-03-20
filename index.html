@@ -152,9 +152,24 @@
         margin-bottom: 5px;
       }
       
-      /* Ensure proper spacing on results section */
+      /* Improved mobile results layout */
       .results-grid {
-        grid-template-columns: 1fr;
+        display: block;
+      }
+      
+      .result-box {
+        margin-bottom: 10px;
+      }
+      
+      .result-box-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .result-label {
+        margin-bottom: 0;
+        font-size: 16px;
       }
       
       /* Larger calculate button for easier tapping */
@@ -162,6 +177,13 @@
         padding: 15px 30px;
         width: 100%;
         max-width: 300px;
+      }
+    }
+    
+    /* Desktop layout for results */
+    @media (min-width: 769px) {
+      .result-box-inner {
+        display: block;
       }
     }
   </style>
@@ -214,16 +236,22 @@
       <h2>Results</h2>
       <div class="results-grid">
         <div class="result-box">
-          <div class="result-label">Horizontal Angle</div>
-          <div class="result-value" id="horizontal-angle">63°</div>
+          <div class="result-box-inner">
+            <div class="result-label">Horizontal Angle</div>
+            <div class="result-value" id="horizontal-angle">64°</div>
+          </div>
         </div>
         <div class="result-box">
-          <div class="result-label">Vertical Angle</div>
-          <div class="result-value" id="vertical-angle">57°</div>
+          <div class="result-box-inner">
+            <div class="result-label">Vertical Angle</div>
+            <div class="result-value" id="vertical-angle">58°</div>
+          </div>
         </div>
         <div class="result-box">
-          <div class="result-label">Diagonal Angle</div>
-          <div class="result-value" id="diagonal-angle">78°</div>
+          <div class="result-box-inner">
+            <div class="result-label">Diagonal Angle</div>
+            <div class="result-value" id="diagonal-angle">80°</div>
+          </div>
         </div>
       </div>
     </div>
@@ -255,3 +283,40 @@
       
       const sensorSize = sensorSizeEl.value;
       const focalLength = parseFloat(focalLengthEl.value);
+      
+      if (!focalLength || isNaN(focalLength)) return;
+      
+      const [sensorWidth, sensorHeight] = SENSOR_SIZES[sensorSize];
+      const adjustFactor = sensorSize === '1/4"' ? 1.0 : 1.06;
+      
+      const horizontal = 2 * Math.atan(sensorWidth / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
+      const vertical = 2 * Math.atan(sensorHeight / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
+      const diagonal = 2 * Math.atan(Math.sqrt(sensorWidth * sensorWidth + sensorHeight * sensorHeight) / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
+      
+      document.getElementById('horizontal-angle').textContent = Math.round(horizontal) + '°';
+      document.getElementById('vertical-angle').textContent = Math.round(vertical) + '°';
+      document.getElementById('diagonal-angle').textContent = Math.round(diagonal) + '°';
+    }
+
+    // Add event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Make info icons tappable on mobile
+      const infoIcons = document.querySelectorAll('.info-icon');
+      infoIcons.forEach(icon => {
+        icon.addEventListener('click', function(e) {
+          e.preventDefault();
+          alert(this.getAttribute('data-tooltip'));
+        });
+      });
+      
+      // Calculate button and input change events
+      document.getElementById('calculate-btn').addEventListener('click', calculateAngles);
+      document.getElementById('sensor-size').addEventListener('change', calculateAngles);
+      document.getElementById('focal-length').addEventListener('input', calculateAngles);
+      
+      // Calculate initial values
+      calculateAngles();
+    });
+  </script>
+</body>
+</html>
