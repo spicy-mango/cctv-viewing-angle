@@ -72,22 +72,6 @@
       height: 20px;
       border-radius: 50%;
     }
-    .button-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-    button {
-      background: #0072CE;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 12px 30px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #005ba3;
-    }
     .results {
       background: white;
       border-radius: 10px;
@@ -171,13 +155,6 @@
         margin-bottom: 0;
         font-size: 16px;
       }
-      
-      /* Larger calculate button for easier tapping */
-      button {
-        padding: 15px 30px;
-        width: 100%;
-        max-width: 300px;
-      }
     }
     
     /* Desktop layout for results */
@@ -226,10 +203,6 @@
           <input type="number" id="focal-length" value="2.8" step="0.1" min="0.1">
         </div>
       </div>
-      
-      <div class="button-container">
-        <button id="calculate-btn">Calculate Angles</button>
-      </div>
     </div>
     
     <div class="results">
@@ -267,56 +240,4 @@
       '1/2.7"': [5.6, 4.8],
       '1/2.7" native 16:9': [5.6, 3.15],
       '1/2.5"': [6.0, 5.0],
-      '1/2.3"': [6.4, 5.4],
-      '1/2"': [6.8, 5.8],
-      '1/1.8"': [7.6, 6.4],
-      '1/1.7"': [8.2, 6.8],
-      '2/3"': [9.0, 7.5],
-      '1"': [14.2, 12.8],
-      '4/3"': [18.0, 14.5],
-    };
-
-    // Calculate angles function
-    function calculateAngles() {
-      const sensorSizeEl = document.getElementById('sensor-size');
-      const focalLengthEl = document.getElementById('focal-length');
-      
-      const sensorSize = sensorSizeEl.value;
-      const focalLength = parseFloat(focalLengthEl.value);
-      
-      if (!focalLength || isNaN(focalLength)) return;
-      
-      const [sensorWidth, sensorHeight] = SENSOR_SIZES[sensorSize];
-      const adjustFactor = sensorSize === '1/4"' ? 1.0 : 1.06;
-      
-      const horizontal = 2 * Math.atan(sensorWidth / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
-      const vertical = 2 * Math.atan(sensorHeight / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
-      const diagonal = 2 * Math.atan(Math.sqrt(sensorWidth * sensorWidth + sensorHeight * sensorHeight) / (2 * focalLength)) * (180 / Math.PI) * adjustFactor;
-      
-      document.getElementById('horizontal-angle').textContent = Math.round(horizontal) + '°';
-      document.getElementById('vertical-angle').textContent = Math.round(vertical) + '°';
-      document.getElementById('diagonal-angle').textContent = Math.round(diagonal) + '°';
-    }
-
-    // Add event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-      // Make info icons tappable on mobile
-      const infoIcons = document.querySelectorAll('.info-icon');
-      infoIcons.forEach(icon => {
-        icon.addEventListener('click', function(e) {
-          e.preventDefault();
-          alert(this.getAttribute('data-tooltip'));
-        });
-      });
-      
-      // Calculate button and input change events
-      document.getElementById('calculate-btn').addEventListener('click', calculateAngles);
-      document.getElementById('sensor-size').addEventListener('change', calculateAngles);
-      document.getElementById('focal-length').addEventListener('input', calculateAngles);
-      
-      // Calculate initial values
-      calculateAngles();
-    });
-  </script>
-</body>
-</html>
+      '1/2.3"': [6.4, 5.4
